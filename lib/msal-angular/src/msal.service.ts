@@ -1,8 +1,5 @@
 import {Inject, Injectable, InjectionToken} from "@angular/core";
 import {MsalConfig} from "./msal-config";
-import "rxjs/add/observable/of";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/delay";
 import {
     UserAgentApplication,
     CacheResult,
@@ -31,7 +28,7 @@ export class MsalService extends UserAgentApplication {
                 cacheLocation: config.cacheLocation,
                 redirectUri: config.redirectUri,
                 postLogoutRedirectUri: config.postLogoutRedirectUri,
-                logger: new Logger(config.logger, { correlationId: config.correlationId, level :config.level  ,piiLoggingEnabled: config.piiLoggingEnabled}),
+                logger: new Logger(config.logger, { correlationId: config.correlationId, level :config.level, piiLoggingEnabled: config.piiLoggingEnabled}),
                 loadFrameTimeout: config.loadFrameTimeout,
                 navigateToLoginRequestUrl: config.navigateToLoginRequestUrl,
                 isAngular: true,
@@ -388,4 +385,3 @@ export class MsalService extends UserAgentApplication {
 
 
 }
-
