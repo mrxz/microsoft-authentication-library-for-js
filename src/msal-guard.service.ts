@@ -5,8 +5,6 @@ import {
     RouterStateSnapshot,
 } from "@angular/router";
 import {MSAL_CONFIG, MsalService} from "./msal.service";
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/pairwise';
 import {Location, PlatformLocation} from "@angular/common";
 import {MsalConfig} from "./msal-config";
 import {BroadcastService} from "./broadcast.service";
@@ -59,7 +57,7 @@ export class MsalGuard implements CanActivate {
                     }
 
                 }, (error: any) => {
-                    var errorParts = error.split('|');
+                    var errorParts = error.split("|");
                     var msalError = new MSALError(errorParts[0], errorParts[1], "");
                     this.broadcastService.broadcast("msal:loginFailure", msalError);
                     return false;
@@ -75,7 +73,7 @@ export class MsalGuard implements CanActivate {
         var currentRelativeUrl = this.location.path();
         if (this.isEmpty(currentRelativeUrl)) {
             if (currentAbsoluteUrl.endsWith("/")) {
-                currentAbsoluteUrl = currentAbsoluteUrl.replace(/\/$/, '');
+                currentAbsoluteUrl = currentAbsoluteUrl.replace(/\/$/, "");
             }
             return currentAbsoluteUrl;
         }
@@ -91,6 +89,6 @@ export class MsalGuard implements CanActivate {
 
     isObjectEmpty(obj: Object) {
         return Object.keys(obj).length === 0;
-    };
+    }
 
 }
