@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from "@angular/common/http";
 import { Observable, from } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { mergeMap, tap } from "rxjs/operators";
 import {MsalService} from "./msal.service";
 import {BroadcastService} from "./broadcast.service";
 import {MSALError} from "./MSALError";
@@ -45,19 +45,18 @@ export class MsalInterceptor implements HttpInterceptor {
                     },
                 });
             })).pipe(
-							map(req => next.handle(req).pipe(
-								tap({ error: err => {
-	                if (err instanceof HttpErrorResponse && err.status === 401) {
-	                    var scopes = this.auth.getScopesForEndpoint(req.url);
-	                    var tokenStored = this.auth.getCachedTokenInternal(scopes);
-	                    if (tokenStored && tokenStored.token) {
-	                        this.auth.clearCacheForScope(tokenStored.token);
-	                    }
-	                    var msalError = new MSALError(JSON.stringify(err), "", JSON.stringify(scopes));
-	                    this.broadcastService.broadcast("msal:notAuthorized", msalError);
-	                }
-	            	}}),
-							)),
+							mergeMap(req => next.handle(req)),
+							tap({ error: err => {
+                if (err instanceof HttpErrorResponse && err.status === 401) {
+                    var scopes = this.auth.getScopesForEndpoint(req.url);
+                    var tokenStored = this.auth.getCachedTokenInternal(scopes);
+                    if (tokenStored && tokenStored.token) {
+                        this.auth.clearCacheForScope(tokenStored.token);
+                    }
+                    var msalError = new MSALError(JSON.stringify(err), "", JSON.stringify(scopes));
+                    this.broadcastService.broadcast("msal:notAuthorized", msalError);
+                }
+							}}),
 						); //calling next.handle means we are passing control to next interceptor in chain
         }
     }
