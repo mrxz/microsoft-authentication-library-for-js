@@ -1,4 +1,4 @@
-/*! msal v1.1.3 2019-09-13 */
+/*! msal v1.1.3 2019-09-19 */
 'use strict';
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
